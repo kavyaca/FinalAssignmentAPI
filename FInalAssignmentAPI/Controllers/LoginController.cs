@@ -2,6 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using FInalAssignmentAPI;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -13,15 +14,15 @@ namespace SecureAPI
 
         [HttpPost]
         [Route("api/Login")]
-        public IActionResult Get(string username, string password)
+        public IActionResult Get(string username, string password, string role)
         {
             if (username == password)
             {
-                return new ObjectResult(GenerateToken(username));
+                return new ObjectResult(GenerateToken(username,role));
             }
             else if (username == "admin" && password == "password")
             {
-                return new ObjectResult(GenerateToken(username));
+                return new ObjectResult(GenerateToken(username,role));
             }
             else
                 return BadRequest();
@@ -29,14 +30,14 @@ namespace SecureAPI
 
         // Generate a Token with expiration and Claim meta-data.
         // And sign the token with the SIGNING_KEY
-        private string GenerateToken(string username)
+        private string GenerateToken(string username,string role)
         {
 
 
             var claims = new[] {
                    new Claim(JwtRegisteredClaimNames.GivenName, username),
                    new Claim("apitoken", "login"),
-
+                   new Claim(ClaimTypes.Role, role)
                                };
 
             var secretBytes = Encoding.UTF8.GetBytes(JWTKeys.Secret);

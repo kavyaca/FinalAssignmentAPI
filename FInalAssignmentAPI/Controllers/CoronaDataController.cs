@@ -10,6 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FInalAssignmentAPI
 {
+    [Route("api/[controller]")]
+    [Authorize]
+    [ApiController]
+    
     public class CoronaDataController : Controller
     {
         // GET: /<controller>/
@@ -38,19 +42,18 @@ new Data {Code = "RT",City = "Repatriated travellers", ConfirmedCases = 13, Prob
  };
 
 
-
-        [Authorize]
+        //Get Api with secure end point
         [HttpGet]
-        [Route("api/corona")]
         public IEnumerable<Data> Get()
         {
 
             return coronaData;
         }
 
-
+        //Get one API with secure endpoint and role
         [HttpGet]
-        [Route("api/detail/{Code}")]
+        [Route("{Code}")]
+        [Authorize(Roles = "Admin")]
         public Data Get(string code)
         {
 
